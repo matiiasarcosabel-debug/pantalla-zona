@@ -268,6 +268,11 @@
     slides[actual].classList.add("activa");
   }, (D.segundosPorFoto || 7) * 1000);
 
+  // En el TV: al tocar cualquier botón del control, pasa a pantalla completa
+  const completa = () => { const e = document.documentElement; (e.requestFullscreen || e.webkitRequestFullscreen || (() => {})).call(e); };
+  document.addEventListener("keydown", completa);
+  document.addEventListener("click", completa);
+
   // Recarga cada 10 minutos para tomar cambios de precios
   setTimeout(() => location.reload(), 10 * 60 * 1000);
 </script>

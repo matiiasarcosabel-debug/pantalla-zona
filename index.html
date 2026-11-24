@@ -34,7 +34,7 @@
   /* ---------- Fotos ---------- */
   .fotos { position: relative; overflow: hidden; grid-row: 1; grid-column: 1; }
   .slide {
-    position: absolute; inset: 0;
+    position: absolute; top: 0; right: 0; bottom: 0; left: 0;
     opacity: 0; transition: opacity 1.4s ease;
     background-size: cover; background-position: center 30%;
   }
@@ -42,11 +42,11 @@
   .slide.activa .foto { animation: zoom 9s ease-out forwards; }
   /* Fondo de marca: "ZONA" detrás de las fotos */
   .fondo-marca {
-    position: absolute; inset: 0; overflow: hidden;
+    position: absolute; top: 0; right: 0; bottom: 0; left: 0; overflow: hidden;
     background: radial-gradient(circle at 62% 50%, #3b3838 0%, #1c1a1a 45%, #0d0d0d 85%);
   }
   .fondo-marca .filas {
-    position: absolute; inset: -40% -30%;
+    position: absolute; top: -40%; bottom: -40%; left: -30%; right: -30%;
     transform: rotate(-14deg);
     display: flex; flex-direction: column; justify-content: space-around;
   }
@@ -75,7 +75,7 @@
     font-size: 3vw; letter-spacing: .6vw; color: rgba(255,255,255,.12);
   }
   .slide .foto {
-    position: absolute; inset: 0;
+    position: absolute; top: 0; right: 0; bottom: 0; left: 0;
     background-size: contain; background-repeat: no-repeat; background-position: 62% center;
   }
   @keyframes zoom { from { transform: scale(1); } to { transform: scale(1.07); } }
@@ -87,7 +87,7 @@
   }
   .slide.decorativa svg { width: 22vw; height: 22vw; opacity: .9; }
   .fotos::after {
-    content: ""; position: absolute; inset: 0; pointer-events: none;
+    content: ""; position: absolute; top: 0; right: 0; bottom: 0; left: 0; pointer-events: none;
     background: linear-gradient(180deg, rgba(0,0,0,.55) 0%, transparent 35%, transparent 55%, rgba(0,0,0,.85) 100%);
   }
   .marca {
@@ -132,7 +132,8 @@
     margin-bottom: 2.5vh;
   }
   .lista { flex: 1; display: flex; flex-direction: column; justify-content: space-evenly; }
-  .servicio { display: flex; align-items: baseline; gap: 1vw; }
+  .servicio { display: flex; align-items: baseline; }
+  .servicio > * + * { margin-left: 1vw; }
   .servicio .nombre { font-size: 1.9vw; font-weight: 800; white-space: nowrap; }
   .servicio .puntos { flex: 1; border-bottom: .2vw dotted rgba(216,169,75,.45); transform: translateY(-.4vw); }
   .servicio .precio { font-family: "Bebas Neue", Impact, sans-serif; font-size: 2.8vw; color: var(--oro); white-space: nowrap; }
@@ -146,12 +147,15 @@
     display: flex; align-items: center; justify-content: space-between;
     padding: 0 3vw;
   }
-  .redes { display: flex; gap: 4vw; }
-  .red { display: flex; align-items: center; gap: 1vw; }
+  .redes { display: flex; }
+  .redes > * + * { margin-left: 4vw; }
+  .red { display: flex; align-items: center; }
+  .red > * + * { margin-left: 1vw; }
   .red svg { width: 3.4vw; height: 3.4vw; flex-shrink: 0; }
   .red .tipo { font-size: 1vw; color: var(--gris); letter-spacing: .15vw; font-weight: 600; }
   .red .valor { font-size: 2.1vw; font-weight: 800; }
-  .qr-caja { display: flex; align-items: center; gap: 1.4vw; }
+  .qr-caja { display: flex; align-items: center; }
+  .qr-caja > * + * { margin-left: 1.4vw; }
   .qr-caja .qr-texto { font-family: "Bebas Neue", Impact, sans-serif; font-size: 2.2vw; color: var(--oro); text-align: right; line-height: 1; }
   #qr { background: #fff; padding: .5vw; border-radius: .4vw; width: 12vh; height: 12vh; }
   #qr img, #qr canvas { width: 100% !important; height: 100% !important; }

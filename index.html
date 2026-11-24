@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pantalla Barbería</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@600&family=Caveat&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="datos.js"></script>
+<style>
+  :root {
+    --fondo: #0d0d0d;
+    --panel: #161514;
+    --oro: #d8a94b;
+    --crema: #f3ead8;
+    --gris: #9a948a;
+    --rojo: #c8372d;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 100vw; height: 100vh; overflow: hidden;
+    background: var(--fondo); color: var(--crema);
+    font-family: "Inter", Arial, sans-serif;
+    cursor: none;
+  }
+  .pantalla {
+    display: grid;
+    grid-template-columns: 56vw 44vw;
+    grid-template-rows: 1fr 15vh;
+    width: 100vw; height: 100vh;
+  }
+
+  /* ---------- Fotos ---------- */
+  .fotos { position: relative; overflow: hidden; grid-row: 1; grid-column: 1; }
+  .slide {
+    position: absolute; inset: 0;
+    opacity: 0; transition: opacity 1.4s ease;
+    background-size: cover; background-position: center 30%;
+  }
+  .slide.activa { opacity: 1; }
+  .slide.activa .foto { animation: zoom 9s ease-out forwards; }
+  /* Fondo de marca: "ZONA" detrás de las fotos */
+  .fondo-marca {
+    position: absolute; inset: 0; overflow: hidden;
+    background: radial-gradient(circle at 62% 50%, #3b3838 0%, #1c1a1a 45%, #0d0d0d 85%);
+  }
+  .fondo-marca .filas {
+    position: absolute; inset: -40% -30%;
+    transform: rotate(-14deg);
+    display: flex; flex-direction: column; justify-content: space-around;
+  }
+  .fondo-marca .fila {
+    white-space: nowrap;
+    font-family: "Montserrat", Arial, sans-serif; font-weight: 600;
+    font-size: 6vw; letter-spacing: .4vw; line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: .07vw rgba(243,234,216,.13);
+  }
+  .fondo-marca .fila:nth-child(even) { margin-left: -14vw; }
+  .fondo-marca .circulo {
+    position: absolute; left: 62%; top: 50%;
+    width: 78vh; height: 78vh; transform: translate(-50%, -50%);
+    border: .35vw solid rgba(255,255,255,.10); border-radius: 50%;
+    background: rgba(13,13,13,.55);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .fondo-marca .circulo b {
+    font-family: "Montserrat", Arial, sans-serif; font-weight: 600;
+    font-size: 10vw; letter-spacing: -.2vw; line-height: 1;
+    color: rgba(255,255,255,.10);
+  }
+  .fondo-marca .circulo i {
+    font-family: "Caveat", cursive; font-style: normal;
+    font-size: 3vw; letter-spacing: .6vw; color: rgba(255,255,255,.12);
+  }
+  .slide .foto {
+    position: absolute; inset: 0;
+    background-size: contain; background-repeat: no-repeat; background-position: 62% center;
+  }
+  @keyframes zoom { from { transform: scale(1); } to { transform: scale(1.07); } }
+  .slide.decorativa {
+    background:
+      repeating-linear-gradient(135deg, rgba(200,55,45,.18) 0 3vw, transparent 3vw 6vw, rgba(243,234,216,.06) 6vw 9vw, transparent 9vw 12vw),
+      radial-gradient(circle at 30% 40%, #2a2420, #0d0d0d 70%);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .slide.decorativa svg { width: 22vw; height: 22vw; opacity: .9; }
+  .fotos::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(180deg, rgba(0,0,0,.55) 0%, transparent 35%, transparent 55%, rgba(0,0,0,.85) 100%);
+  }
+  .marca {
+    position: absolute; z-index: 2; left: 3vw; top: 3vh;
+  }
+  .marca h1 {
+    font-family: "Bebas Neue", Impact, sans-serif;
+    font-size: 6vw; line-height: .9; letter-spacing: .15vw;
+    color: var(--crema); text-shadow: 0 .3vw 1.5vw rgba(0,0,0,.6);
+  }
+  .marca p { font-size: 1.5vw; color: var(--oro); font-weight: 600; margin-top: .6vh; text-shadow: 0 .2vw .8vw rgba(0,0,0,.9); }
+  .marca .dir { font-size: 1.2vw; color: var(--crema); font-weight: 400; margin-top: .3vh; text-shadow: 0 .2vw .8vw rgba(0,0,0,.8); }
+  .logo {
+    width: 20vh; height: 20vh; border-radius: 50%;
+    background-repeat: no-repeat;
+    box-shadow: 0 .6vw 2vw rgba(0,0,0,.6);
+    margin-bottom: 1vh;
+  }
+
+  .promo {
+    position: absolute; z-index: 2; left: 3vw; bottom: 4vh;
+    background: var(--rojo); color: #fff;
+    padding: 1.6vh 2vw; border-radius: .6vw;
+    box-shadow: 0 1vw 3vw rgba(0,0,0,.5);
+    animation: latido 3s ease-in-out infinite;
+  }
+  .promo .etiqueta { font-size: 1.1vw; font-weight: 800; letter-spacing: .25vw; opacity: .9; }
+  .promo .texto { font-family: "Bebas Neue", Impact, sans-serif; font-size: 3.4vw; line-height: 1; }
+  @keyframes latido { 0%,100% { transform: scale(1); } 50% { transform: scale(1.035); } }
+
+  /* ---------- Precios ---------- */
+  .precios {
+    grid-row: 1; grid-column: 2;
+    background: var(--panel);
+    padding: 5vh 3.2vw 3vh;
+    display: flex; flex-direction: column;
+    border-left: .3vw solid var(--oro);
+  }
+  .precios h2 {
+    font-family: "Bebas Neue", Impact, sans-serif;
+    font-size: 4vw; letter-spacing: .3vw; color: var(--oro);
+    margin-bottom: 2.5vh;
+  }
+  .lista { flex: 1; display: flex; flex-direction: column; justify-content: space-evenly; }
+  .servicio { display: flex; align-items: baseline; gap: 1vw; }
+  .servicio .nombre { font-size: 1.9vw; font-weight: 800; white-space: nowrap; }
+  .servicio .puntos { flex: 1; border-bottom: .2vw dotted rgba(216,169,75,.45); transform: translateY(-.4vw); }
+  .servicio .precio { font-family: "Bebas Neue", Impact, sans-serif; font-size: 2.8vw; color: var(--oro); white-space: nowrap; }
+  .servicio .detalle { font-size: 1.1vw; color: var(--gris); margin-top: .2vh; }
+
+  /* ---------- Barra inferior ---------- */
+  .barra {
+    grid-row: 2; grid-column: 1 / span 2;
+    background: #000;
+    border-top: .25vw solid var(--oro);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 3vw;
+  }
+  .redes { display: flex; gap: 4vw; }
+  .red { display: flex; align-items: center; gap: 1vw; }
+  .red svg { width: 3.4vw; height: 3.4vw; flex-shrink: 0; }
+  .red .tipo { font-size: 1vw; color: var(--gris); letter-spacing: .15vw; font-weight: 600; }
+  .red .valor { font-size: 2.1vw; font-weight: 800; }
+  .qr-caja { display: flex; align-items: center; gap: 1.4vw; }
+  .qr-caja .qr-texto { font-family: "Bebas Neue", Impact, sans-serif; font-size: 2.2vw; color: var(--oro); text-align: right; line-height: 1; }
+  #qr { background: #fff; padding: .5vw; border-radius: .4vw; width: 12vh; height: 12vh; }
+  #qr img, #qr canvas { width: 100% !important; height: 100% !important; }
+</style>
+</head>
+<body>
+<div class="pantalla">
+  <section class="fotos" id="fotos">
+    <div class="marca"><div class="logo" id="logo" hidden></div><h1 id="nombre"></h1><p id="eslogan"></p><p class="dir" id="direccion"></p></div>
+    <div class="promo"><div class="etiqueta" id="promoTitulo"></div><div class="texto" id="promoTexto"></div></div>
+  </section>
+
+  <section class="precios">
+    <h2>Servicios</h2>
+    <div class="lista" id="lista"></div>
+  </section>
+
+  <footer class="barra">
+    <div class="redes">
+      <div class="red">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#d8a94b" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#d8a94b"/></svg>
+        <div><div class="tipo">INSTAGRAM</div><div class="valor" id="instagram"></div></div>
+      </div>
+      <div class="red">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#d8a94b" stroke-width="2"><path d="M3.5 20.5l1.3-4.2A8.5 8.5 0 1 1 8 19.3z"/><path d="M9 8.5c0 3.5 3 6.5 6.5 6.5l1-1.5-2-1-1 1c-1-.5-2.5-2-3-3l1-1-1-2z" fill="#d8a94b" stroke="none"/></svg>
+        <div><div class="tipo">WHATSAPP · AGENDA TU HORA</div><div class="valor" id="whatsapp"></div></div>
+      </div>
+    </div>
+    <div class="qr-caja">
+      <div class="qr-texto" id="qrTexto"></div>
+      <div id="qr"></div>
+    </div>
+  </footer>
+</div>
+
+<script>
+  const D = BARBERIA;
+  const $ = id => document.getElementById(id);
+
+  $("nombre").textContent = D.nombre;
+  $("eslogan").textContent = D.eslogan;
+  $("direccion").textContent = D.direccion || "";
+  if (D.logo) {
+    // Recorte del logo circular dentro de la imagen fuente (1179x1520 px):
+    // círculo centrado en (120,142) con radio 95 px
+    const L = $("logo"), d = 20, r = 95, cx = 120, cy = 142, k = d / (2 * r);
+    L.style.backgroundImage = `url("${D.logo}")`;
+    L.style.backgroundSize = `${1179 * k}vh auto`;
+    L.style.backgroundPosition = `${-(cx - r) * k}vh ${-(cy - r) * k}vh`;
+    L.hidden = false;
+    $("nombre").hidden = true;
+  }
+  $("promoTitulo").textContent = D.promo.titulo;
+  $("promoTexto").textContent = D.promo.texto;
+  $("instagram").textContent = D.instagram;
+  $("whatsapp").textContent = D.whatsapp;
+  $("qrTexto").innerHTML = D.qrTexto.split("|").map(t => t.replace(/[<>&]/g, "")).join("<br>");
+
+  // Lista de precios
+  $("lista").innerHTML = D.servicios.map(s => `
+    <div>
+      <div class="servicio"><span class="nombre"></span><span class="puntos"></span><span class="precio"></span></div>
+      <div class="detalle"></div>
+    </div>`).join("");
+  [...$("lista").children].forEach((el, i) => {
+    el.querySelector(".nombre").textContent = D.servicios[i].nombre;
+    el.querySelector(".precio").textContent = D.servicios[i].precio;
+    el.querySelector(".detalle").textContent = D.servicios[i].detalle || "";
+  });
+
+  // Código QR
+  if (window.QRCode) {
+    new QRCode($("qr"), { text: D.qr, width: 256, height: 256, correctLevel: QRCode.CorrectLevel.M });
+  } else {
+    document.querySelector(".qr-caja").style.display = "none";
+  }
+
+  // Carrusel de fotos
+  const tijera = `<svg viewBox="0 0 64 64" fill="none" stroke="#d8a94b" stroke-width="3"><circle cx="16" cy="48" r="8"/><circle cx="48" cy="48" r="8"/><path d="M21 42L50 8M43 42L14 8"/></svg>`;
+  const cont = $("fotos");
+  const slides = [];
+  function crearSlide(src) {
+    const s = document.createElement("div");
+    s.className = "slide";
+    cont.insertBefore(s, cont.firstChild);
+    slides.push(s);
+    const img = new Image();
+    img.onload = () => {
+      const url = `url("${src}")`;
+      s.innerHTML = `<div class="foto"></div>`;
+      s.firstChild.style.backgroundImage = url;
+    };
+    img.onerror = () => { s.classList.add("decorativa"); s.innerHTML = tijera; };
+    img.src = src;
+  }
+  (D.fotos.length ? D.fotos : ["sin-foto"]).forEach(crearSlide);
+
+  // Fondo de marca (queda detrás de todas las fotos)
+  const marcaTxt = (D.marcaFondo || D.nombre).toUpperCase();
+  const fondo = document.createElement("div");
+  fondo.className = "fondo-marca";
+  const fila = `<div class="fila"></div>`;
+  fondo.innerHTML = `<div class="filas">${fila.repeat(9)}</div>
+    <div class="circulo"><b></b><i>Urban Style</i></div>`;
+  fondo.querySelectorAll(".fila").forEach(f => f.textContent = (marcaTxt + " · URBAN STYLE · ").repeat(6));
+  fondo.querySelector("b").textContent = marcaTxt;
+  cont.insertBefore(fondo, cont.firstChild);
+  let actual = 0;
+  slides[0].classList.add("activa");
+  setInterval(() => {
+    slides[actual].classList.remove("activa");
+    actual = (actual + 1) % slides.length;
+    void slides[actual].offsetWidth;
+    slides[actual].classList.add("activa");
+  }, (D.segundosPorFoto || 7) * 1000);
+
+  // Recarga cada 10 minutos para tomar cambios de precios
+  setTimeout(() => location.reload(), 10 * 60 * 1000);
+</script>
+</body>
+</html>

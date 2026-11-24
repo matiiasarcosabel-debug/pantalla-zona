@@ -35,15 +35,19 @@
   .fotos { position: relative; overflow: hidden; grid-row: 1; grid-column: 1; }
   .slide {
     position: absolute; top: 0; right: 0; bottom: 0; left: 0;
-    opacity: 0; transition: opacity 1.4s ease;
+    opacity: 0; -webkit-transition: opacity .8s linear; transition: opacity .8s linear;
     background-size: cover; background-position: center 30%;
+    /* capa propia en la GPU: el fundido no vuelve a dibujar el resto */
+    -webkit-transform: translateZ(0); transform: translateZ(0);
+    -webkit-backface-visibility: hidden; backface-visibility: hidden;
+    will-change: opacity;
   }
   .slide.activa { opacity: 1; }
-  .slide.activa .foto { animation: zoom 9s ease-out forwards; }
   /* Fondo de marca: "ZONA" detrás de las fotos */
   .fondo-marca {
     position: absolute; top: 0; right: 0; bottom: 0; left: 0; overflow: hidden;
     background: radial-gradient(circle at 62% 50%, #3b3838 0%, #1c1a1a 45%, #0d0d0d 85%);
+    -webkit-transform: translateZ(0); transform: translateZ(0);
   }
   .fondo-marca .filas {
     position: absolute; top: -40%; bottom: -40%; left: -30%; right: -30%;
@@ -54,8 +58,7 @@
     white-space: nowrap;
     font-family: "Montserrat", Arial, sans-serif; font-weight: 600;
     font-size: 6vw; letter-spacing: .4vw; line-height: 1;
-    color: transparent;
-    -webkit-text-stroke: .07vw rgba(243,234,216,.13);
+    color: rgba(243,234,216,.07);
   }
   .fondo-marca .fila:nth-child(even) { margin-left: -14vw; }
   .fondo-marca .circulo {
@@ -78,7 +81,6 @@
     position: absolute; top: 0; right: 0; bottom: 0; left: 0;
     background-size: contain; background-repeat: no-repeat; background-position: 62% center;
   }
-  @keyframes zoom { from { transform: scale(1); } to { transform: scale(1.07); } }
   .slide.decorativa {
     background:
       repeating-linear-gradient(135deg, rgba(200,55,45,.18) 0 3vw, transparent 3vw 6vw, rgba(243,234,216,.06) 6vw 9vw, transparent 9vw 12vw),
@@ -112,11 +114,9 @@
     background: var(--rojo); color: #fff;
     padding: 1.6vh 2vw; border-radius: .6vw;
     box-shadow: 0 1vw 3vw rgba(0,0,0,.5);
-    animation: latido 3s ease-in-out infinite;
   }
   .promo .etiqueta { font-size: 1.1vw; font-weight: 800; letter-spacing: .25vw; opacity: .9; }
   .promo .texto { font-family: "Bebas Neue", Impact, sans-serif; font-size: 3.4vw; line-height: 1; }
-  @keyframes latido { 0%,100% { transform: scale(1); } 50% { transform: scale(1.035); } }
 
   /* ---------- Precios ---------- */
   .precios {
